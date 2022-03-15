@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+    <meta charset="utf-8">
+    <title>자전거 여행</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="icon" href="bicycle_logo_icon.ico">
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="css/styles.css" rel="stylesheet" />
+    <script src="js/jquery-3.6.0.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.0/font/bootstrap-icons.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet"> <!--button css-->
+
+
+    </head>
+    <body id="body-pd"> 
+        <div class="l-navbar" id="nav-bar">
+            <header class="header" id="header">
+                <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
+            </header>
+            <nav class="nav">
+                <div> <a class="nav_logo"> <i class='bi bi-bicycle nav_logo-icon'></i> <span class="nav_logo-name">자전거 여행</span> </a>
+                    <div class="nav_list"> 
+                        <a class="nav_link "> <i class='bi bi-geo-alt nav_icon'></i> 
+                            <span class="nav_name">인증센터
+                                <label class="switch-button" style="margin-left: 83px"> 
+                                    <input class="checkbox" type="checkbox" name="checkbox" value="injeungLayer" > 
+                                    <span class="onoff-switch"></span>
+                                </label>
+                            </span> 
+                        </a> 
+                        <a class="nav_link"> <i class='bi bi-geo-alt nav_icon'></i> 
+                            <span class="nav_name">자전거 대여소
+                                <label class="switch-button" style="margin-left: 48px"> 
+                                    <input class="checkbox" type="checkbox" name="checkbox" value="rentalLayer" > 
+                                    <span class="onoff-switch"></span> 
+                                </label>
+                            </span> 
+                        </a> 
+                        <a class="nav_link"> <i class='bi bi-geo-alt nav_icon'></i> 
+                            <span class="nav_name">가로등
+                                <label class="switch-button" style="margin-left: 98px" > 
+                                    <input class="checkbox" type="checkbox" name="checkbox" value="lightLayer" > 
+                                    <span class="onoff-switch"></span>
+                                </label>
+                            </span> 
+                        </a> 
+                        <a class="nav_link"> <i class='bi bi-geo-alt nav_icon'></i> 
+                            <span class="nav_name">화장실
+                                <label class="switch-button" style="margin-left: 98px"> 
+                                    <input class="checkbox" type="checkbox" name="checkbox" value="toiletLayer" > 
+                                    <span class="onoff-switch"></span> 
+                                </label>
+                            </span> 
+                        </a> 
+                        <a class="nav_link"> <i class='bi bi-signpost-split nav_icon'></i> 
+                            <span class="nav_name">자전거 길
+                                <label class="switch-button" style="margin-left: 79px" >  
+                                    <input class="checkbox" id="bikeListBtn" type="checkbox" name="checkbox" value="bikeLineLayer" checked="checked"> 
+                                    <span class="onoff-switch"></span> 
+                                </label>
+                            </span> 
+                        </a> 
+                        <div class="bikeList">
+                            <table class="table table-hover">
+                                <tr><td>파주DMZ자전거길</td></tr>
+                                <tr><td>옥천향수100리길</td></tr>
+                                <tr><td>금강자전거길</td></tr>
+                                <tr><td>북한강자전거길</td></tr>
+                                <tr><td>영산강자전거길</td></tr>
+                                <tr><td>남한강자전거길</td></tr>
+                                <tr><td>한강자전거길</td></tr>
+                                <tr><td>신안증도자전거섬</td></tr>
+                                <tr><td>옹진덕적도자전거길</td></tr>
+                                <tr><td>정읍정읍천자전거길</td></tr>
+                                <tr><td>제주해맞이해안로</td></tr>
+                                <tr><td>새재자전거길</td></tr>
+                                <tr><td>아라자전거길</td></tr>
+                                <tr><td>화천파로호자전거길</td></tr>
+                                <tr><td>창원주남저수지자전거길</td></tr>
+                                <tr><td>낙동강자전거길</td></tr>
+                                <tr><td>경주역사탐방자전거길</td></tr>
+                                <tr><td>강릉경포호산소길</td></tr>
+                            </table>
+                        </div>
+
+                    </div>
+                </div> 
+                
+            </nav>
+        </div>
+        <!--Container Main start-->
+        <div class="height-100 bg-light">
+            <div class="map" id="map"></div>
+            <div class="form-inline" >
+                <div class="form-group" style="position: absolute; top: 110px; right: 140px;">
+                    <input class="form-control" id="searchArea" type="text" placeholder="자전거 길을 검색 해보세요" style="width: 210px">
+                    <div class="form-control" id='autoMaker'></div>
+                </div>
+                <button class="custom-btn btn-3" id="search" type="button" style="position: absolute; top: 110px; right: 50px; background-color: rgba(255, 204, 51, 1);">검색</button>
+            </div>
+            <div class="frame" id="current" > 
+                <button type="button" class="custom-btn btn-3" style="position: absolute; top: 60px; right: 50px; background-color: rgba(255, 204, 51, 1);">현재위치</button>
+            </div>
+            <div class="frame" id="base" > 
+                <button type="button" class="custom-btn btn-3" style="position: absolute; top: 60px; right: 140px; background-color: rgba(255, 204, 51, 1);">원위치</button>
+            </div>
+            <div class="frame" id="legend" > 
+                <button type="button" class="custom-btn btn-3" style="position: absolute; top: 60px; right: 230px; background-color: rgba(255, 204, 51, 1);">범례</button>
+            </div>
+            <select class="form-control" id="basemaps" title="맵 변경">
+                <option value="BaseMap"> 일반 지도</option>
+                <option value="GrayMap"> 회색 지도</option>
+                <option value="MidnightMap"> 야간 지도</option>
+                <option value="HybridMap"> 하이브리드 지도</option>
+                <option value="SatelliteMap"> 위성 지도</option>
+            </select>
+
+             
+            <input type="image" class="legendImage" id="legendImage" src="/legend.svg" />
+            
+            <div id="popup" class="ol-popup">
+                <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+                <div id="popup-content"></div>
+            </div>
+        </div>
+        <!--Container Main end-->
+
+
+    <!-- script 부분 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="js/scripts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+  </body>
+</html>
