@@ -17,7 +17,6 @@ import {XYZ} from 'ol/source';
 import TileLayer from 'ol/layer/Tile';
 
 import Vector from 'ol/source/Vector';
-import VectorSource from 'ol/source/Vector';
 import {Vector as VectorLayer, Group} from 'ol/layer';
 
 import GeoJSON from 'ol/format/GeoJSON';
@@ -25,12 +24,11 @@ import {bbox as bboxStrategy} from 'ol/loadingstrategy';
 import Overlay from 'ol/Overlay'
 
 import {defaults as defaultControls,FullScreen, ScaleLine, } from 'ol/control.js';
-import {defaults as defaultInteractions } from 'ol/interaction.js';
+import {defaults as defaultInteractions, DragPan, MouseWheelZoom } from 'ol/interaction';
 import KeyboardPan from 'ol/interaction/KeyboardPan';
 import KeyboardZoom from 'ol/interaction/KeyboardZoom';
-import {DragPan, MouseWheelZoom} from 'ol/interaction';
 
-import {Stroke, Style, Fill} from 'ol/style';
+import {Stroke, Style, Fill, Circle as CircleStyle} from 'ol/style';
 import Icon from 'ol/style/Icon';
 import injeungP from '../assets/injeungP.svg';
 import rentalP from '../assets/rentalP.svg';
@@ -40,8 +38,21 @@ import toiletP from '../assets/toiletP.svg';
 import Feature from 'ol/Feature.js';
 import Geolocation from 'ol/Geolocation.js';
 import Point from 'ol/geom/Point.js';
-import {Circle as CircleStyle} from 'ol/style.js';
 // import {Cluster} from 'ol/source';
+
+
+const setArea = ['Paju', 'Okcheon', 'Gunsan', 'Namyangju', 'Muan', 'Chungju', 'Seoul', 
+                  'Sinan', 'Ongjin', 'Suseongdong', 'Jeju', 'Sangju', 'Incheon', 'Hwacheon', 
+                  'Changwon', 'Busan', 'Gyeongju', 'Gangneung'
+] ;
+const bikeArray = [
+  {name:'파주DMZ자전거길'},{name:'옥천향수100리길'},{name:'금강자전거길'},
+  {name:'북한강자전거길'},{name:'영산강자전거길'},{name:'남한강자전거길'},
+  {name:'한강자전거길'},{name:'신안증도자전거섬'},{name:'옹진덕적도자전거길'},
+  {name:'정읍정읍천자전거길'},{name:'제주해맞이해안로'},{name:'새재자전거길'},
+  {name:'아라자전거길'},{name:'화천파로호자전거길'},{name:'창원주남저수지자전거길'},
+  {name:'낙동강자전거길'},{name:'경주역사탐방자전거길'},{name:'강릉경포호산소길'}
+];
 
 
 $(document).ready(function() {
@@ -57,6 +68,14 @@ $(document).ready(function() {
     },
   }); 
 
+  // if($('#popup').val() == " ") {
+  //   console.log($('#popup').val())
+  //   console.log('empty and hide')
+  // } else {
+  //   console.log('show')
+  // }
+
+//2BDE3AC0-CF24-34B9-981F-572853838825
   // 배경 맵 setting
   let baseMap = new TileLayer({
     source: new XYZ({
@@ -84,7 +103,7 @@ $(document).ready(function() {
   });
   let satelliteMap = new TileLayer({
     source: new XYZ({
-      url: 'https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=cwnXZGxN7rsCwzl3bwOc'
+      url: 'http://xdworld.vworld.kr:8080/2d/Satellite/201301/{z}/{x}/{y}.jpeg'
     }),
     visible:false
   });
@@ -96,7 +115,7 @@ $(document).ready(function() {
     ]),
     keyboardEventTarget: document,
     layers: [
-      baseMap, grayMap, midnightMap, hybridMap, satelliteMap
+      baseMap, grayMap, midnightMap, satelliteMap, hybridMap
     ],
     target: 'map',
     overlays: [overlay],
@@ -128,21 +147,15 @@ $(document).ready(function() {
     } else if(value == "MidnightMap") {
       baseMap.setVisible(!value);
       grayMap.setVisible(!value);
-      hybridMap.setVisible(!value);
       satelliteMap.setVisible(!value);
       midnightMap.setVisible(value);
-    } else if(value == "HybridMap") {
-      baseMap.setVisible(!value);
-      grayMap.setVisible(!value);
-      midnightMap.setVisible(!value);
-      satelliteMap.setVisible(!value);
       hybridMap.setVisible(value);
     } else if(value == "SatelliteMap") {
       baseMap.setVisible(!value);
       grayMap.setVisible(!value);
       midnightMap.setVisible(!value);
-      hybridMap.setVisible(!value);
       satelliteMap.setVisible(value);
+      hybridMap.setVisible(value);
     } 
   })
 
@@ -150,7 +163,7 @@ $(document).ready(function() {
   let bikeLine = new Vector({
     format: new GeoJSON(),
     url: extent => {
-      return 'http://localhost:8080/geoserver/ows?' +
+      return process.env.VUE_APP_GEOSERVER_URI + '/ows?' +
         'service=WFS' +
         '&version=1.0.0' +
         '&request=GetFeature' +
@@ -162,9 +175,7 @@ $(document).ready(function() {
     strategy: bboxStrategy
   });
 
-  let setArea = ['Paju', 'Okcheon', 'Gunsan', 'Namyangju', 'Muan', 'Chungju', 'Seoul', 
-                  'Sinan', 'Ongjin', 'Suseongdong', 'Jeju', 'Sangju', 'Incheon', 'Hwacheon', 
-                  'Changwon', 'Busan', 'Gyeongju', 'Gangneung'] ;
+  
   let colorStyle;
   let weather;
   let styleArray = [];
@@ -180,13 +191,12 @@ $(document).ready(function() {
         // 날씨에 따른 색상구분 부분  
           if(weather == 'Clear' || weather == 'Clouds') {
             colorStyle = 'rgba(0, 204, 0, 1)' ;
-          } else if(weather == 'Rain' || weather == 'Snow' || weather == 'Thunderstorm') {
-            colorStyle = 'rgba(255, 0, 0, 1)' ;
           } else if(weather == 'Drizzle') {
-            colorStyle = 'rgba(102, 178, 255, 1)' ;
-          } else if(weather == 'Fog' || weather == 'Mist' || weather == 'Smoke' || weather == 'Haze' || weather == 'Sand' ||
+            colorStyle = 'rgba(255, 255, 0, 1)' ;
+          } else if(weather == 'Rain' || weather == 'Snow' || weather == 'Thunderstorm' || 
+                    weather == 'Fog' || weather == 'Mist' || weather == 'Smoke' || weather == 'Haze' || weather == 'Sand' ||
                     weather == 'Ash' || weather == 'Squall' || weather == 'Tornado') {
-            colorStyle = 'rgba(96, 96, 96, 1)' ;
+            colorStyle = 'rgba(255, 0, 0, 1)' ;
           }   
         styleArray.push({name: setArea[i], color: colorStyle});
       }
@@ -204,8 +214,8 @@ $(document).ready(function() {
       if(an== 'Paju') {
             style = new Style({
                 stroke: new Stroke({
-                  width: 5,
-                  color: styleArray[0].color,
+                  width: 3,
+                  color: styleArray[0].color,  
                 })
               });
           } else if(an=='Okcheon') {
@@ -336,7 +346,7 @@ $(document).ready(function() {
   let injeungPoint = new Vector({
     format: new GeoJSON(),
     url: extent => {
-      return 'http://localhost:8080/geoserver/ows?' +
+      return process.env.VUE_APP_GEOSERVER_URI + '/ows?' +
         'service=WFS' +
         '&version=1.0.0' +
         '&request=GetFeature' +
@@ -370,7 +380,7 @@ $(document).ready(function() {
   let rentalPoint = new Vector({
     format: new GeoJSON(),
     url: extent => {
-      return 'http://localhost:8080/geoserver/ows?' +
+      return process.env.VUE_APP_GEOSERVER_URI + '/ows?' +
         'service=WFS' +
         '&version=1.0.0' +
         '&request=GetFeature' +
@@ -405,7 +415,7 @@ $(document).ready(function() {
   let lightPoint = new Vector({
     format: new GeoJSON(),
     url: extent => {
-      return 'http://localhost:8080/geoserver/ows?' +
+      return process.env.VUE_APP_GEOSERVER_URI + '/ows?' +
         'service=WFS' +
         '&version=1.0.0' +
         '&request=GetFeature' +
@@ -439,7 +449,7 @@ $(document).ready(function() {
   let toiletTest = new Vector({
     format: new GeoJSON(),
     url: extent => {
-      return 'http://localhost:8080/geoserver/ows?' +
+      return process.env.VUE_APP_GEOSERVER_URI + '/ows?' +
         'service=WFS' +
         '&version=1.0.0' +
         '&request=GetFeature' +
@@ -531,7 +541,7 @@ $(document).ready(function() {
   }));
   new VectorLayer({
     map: map,
-    source: new VectorSource({
+    source: new Vector({
         features: [positionFeature]
     })
   });
@@ -554,7 +564,7 @@ $(document).ready(function() {
     }),
   });
   const featureOverlay = new VectorLayer({
-    source: new VectorSource(),
+    source: new Vector(),
     map: map,
     style: [highlightLineStyle, highlightCircleStyle],
   });
@@ -614,7 +624,7 @@ $(document).ready(function() {
             overlay.setPosition(coordinate);
           }
         })
-        map.getView().fit(feature.getGeometry(), {duration: 1000, padding: [200, 100, 200, 100]} )
+        map.getView().fit(feature.getGeometry(), {duration: 1000, padding: [200, 200, 200, 100]} )
       } else if(feature.get('구분') == 'injeungPoint'){
         const coordinate = evt.coordinate;
         $('#popup-content').append('<p>' + feature.get('name') + '</p>' + '<br>' + '주소: ' + feature.get('juso_2') + '<br>');
@@ -675,19 +685,13 @@ $(document).ready(function() {
       let gbv = getBike[i].get('l_name')
       if(gbv == (inputValue) ) {
         console.log('검색 성공')
-        map.getView().fit(getBike[i].getGeometry(), {duration: 1000, padding: [200, 100, 200, 100]} ) 
+        map.getView().fit(getBike[i].getGeometry(), {duration: 1000, padding: [200, 200, 200, 100]} ) 
         break;
       } else {
         console.log('검색 실패')
       }
     }
   })
-  let bikeArray = [
-    {name:'파주DMZ자전거길'},{name:'옥천향수100리길'},{name:'금강자전거길'},{name:'북한강자전거길'},{name:'영산강자전거길'},{name:'남한강자전거길'}
-    ,{name:'한강자전거길'},{name:'신안증도자전거섬'},{name:'옹진덕적도자전거길'},{name:'정읍정읍천자전거길'},{name:'제주해맞이해안로'},{name:'새재자전거길'}
-    ,{name:'아라자전거길'},{name:'화천파로호자전거길'},{name:'창원주남저수지자전거길'},{name:'낙동강자전거길'},{name:'경주역사탐방자전거길'},{name:'강릉경포호산소길'}
-  ];
-
   $('#searchArea').keyup(function() {
     let txt = $(this).val();
     if(txt != ''){
@@ -753,9 +757,3 @@ $('#bikeListBtn').on('change',function(){
 })
 </script>
 
-<style>
-  #map {
-    width: 100%;
-    height: 100%;
-  }
-</style>

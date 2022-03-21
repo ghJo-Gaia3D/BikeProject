@@ -26,48 +26,48 @@
                 <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
             </header>
             <nav class="nav">
-                <div> <a class="nav_logo"> <i class='bi bi-bicycle nav_logo-icon'></i> <span class="nav_logo-name">자전거 여행</span> </a>
+                <div> <h2 class="nav_logo"> <i class='bi bi-bicycle nav_logo-icon'></i> <span class="nav_logo-name">자전거 여행</span> </h2>
                     <div class="nav_list"> 
-                        <a class="nav_link "> <i class='bi bi-geo-alt nav_icon'></i> 
+                        <h5 class="nav_link "> <i class='bi bi-geo-alt nav_icon'></i> 
                             <span class="nav_name">인증센터
-                                <label class="switch-button" style="margin-left: 83px"> 
+                                <label class="switch-button" style="margin-left: 81px"> 
                                     <input class="checkbox" type="checkbox" name="checkbox" value="injeungLayer" > 
                                     <span class="onoff-switch"></span>
                                 </label>
                             </span> 
-                        </a> 
-                        <a class="nav_link"> <i class='bi bi-geo-alt nav_icon'></i> 
+                        </h5> 
+                        <h5 class="nav_link"> <i class='bi bi-geo-alt nav_icon'></i> 
                             <span class="nav_name">자전거 대여소
-                                <label class="switch-button" style="margin-left: 48px"> 
+                                <label class="switch-button" style="margin-left: 38px"> 
                                     <input class="checkbox" type="checkbox" name="checkbox" value="rentalLayer" > 
                                     <span class="onoff-switch"></span> 
                                 </label>
                             </span> 
-                        </a> 
-                        <a class="nav_link"> <i class='bi bi-geo-alt nav_icon'></i> 
+                        </h5> 
+                        <h5 class="nav_link"> <i class='bi bi-geo-alt nav_icon'></i> 
                             <span class="nav_name">가로등
-                                <label class="switch-button" style="margin-left: 98px" > 
+                                <label class="switch-button" style="margin-left: 100px" > 
                                     <input class="checkbox" type="checkbox" name="checkbox" value="lightLayer" > 
                                     <span class="onoff-switch"></span>
                                 </label>
                             </span> 
-                        </a> 
-                        <a class="nav_link"> <i class='bi bi-geo-alt nav_icon'></i> 
+                        </h5> 
+                        <h5 class="nav_link"> <i class='bi bi-geo-alt nav_icon'></i> 
                             <span class="nav_name">화장실
-                                <label class="switch-button" style="margin-left: 98px"> 
+                                <label class="switch-button" style="margin-left: 100px"> 
                                     <input class="checkbox" type="checkbox" name="checkbox" value="toiletLayer" > 
                                     <span class="onoff-switch"></span> 
                                 </label>
                             </span> 
-                        </a> 
-                        <a class="nav_link"> <i class='bi bi-signpost-split nav_icon'></i> 
+                        </h5> 
+                        <h5 class="nav_link"> <i class='bi bi-signpost-split nav_icon'></i> 
                             <span class="nav_name">자전거 길
-                                <label class="switch-button" style="margin-left: 79px" >  
+                                <label class="switch-button" style="margin-left: 75px" >  
                                     <input class="checkbox" id="bikeListBtn" type="checkbox" name="checkbox" value="bikeLineLayer" checked="checked"> 
                                     <span class="onoff-switch"></span> 
                                 </label>
                             </span> 
-                        </a> 
+                        </h5> 
                         <div class="bikeList">
                             <table class="table table-hover">
                                 <tr><td>파주DMZ자전거길</td></tr>
@@ -90,7 +90,6 @@
                                 <tr><td>강릉경포호산소길</td></tr>
                             </table>
                         </div>
-
                     </div>
                 </div> 
                 
@@ -113,20 +112,19 @@
                 <button type="button" class="custom-btn btn-3" style="position: absolute; top: 60px; right: 140px; background-color: rgba(255, 204, 51, 1);">원위치</button>
             </div>
             <div class="frame" id="legend" > 
-                <button type="button" class="custom-btn btn-3" style="position: absolute; top: 60px; right: 230px; background-color: rgba(255, 204, 51, 1);">범례</button>
+                <button type="button" class="custom-btn btn-3" style="position: absolute; top: 60px; right: 230px; background-color: rgba(255, 204, 51, 1);">날씨 지수</button>
             </div>
             <select class="form-control" id="basemaps" title="맵 변경">
                 <option value="BaseMap"> 일반 지도</option>
                 <option value="GrayMap"> 회색 지도</option>
                 <option value="MidnightMap"> 야간 지도</option>
-                <option value="HybridMap"> 하이브리드 지도</option>
                 <option value="SatelliteMap"> 위성 지도</option>
             </select>
 
              
             <input type="image" class="legendImage" id="legendImage" src="/legend.svg" />
             
-            <div id="popup" class="ol-popup">
+            <div id="popup" class="ol-popup" > 
                 <a href="#" id="popup-closer" class="ol-popup-closer"></a>
                 <div id="popup-content"></div>
             </div>
